@@ -13,7 +13,7 @@ services:
       - .:/home/node/app
     networks:
       - app-network
-      - streaming-rabbitmq_micro-catalog # PASTADOREBBITMQ_micro-catalog
+      - streaming-rabbitmq_codeflix # PASTADOREBBITMQ_codeflix
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
@@ -36,5 +36,5 @@ services:
 networks:
   app-network:
     driver: bridge
-  streaming-rabbitmq_micro-catalog: # PASTADOREBBITMQ_micro-catalog
+  streaming-rabbitmq_codeflix: # PASTADOREBBITMQ_codeflix
     external: true

@@ -1,20 +1,20 @@
-import { bind, BindingScope } from '@loopback/core';
+import { bind, /* inject, */ BindingScope } from '@loopback/core';
 import { repository } from '@loopback/repository';
-import { CategoryRepository } from '../repositories';
-import { rabbitmqSubscribe } from '../decorators/rabbitmq-subscribe.decorator';
 import { ConsumeMessage } from 'amqplib';
+import { rabbitmqSubscribe } from '../decorators/rabbitmq-subscribe.decorator';
+import { GenreRepository } from '../repositories';
 
 @bind({ scope: BindingScope.TRANSIENT })
-export class CategorySyncService {
+export class GenreSyncServiceService {
 
   constructor(
-    @repository(CategoryRepository) private categoryRepo: CategoryRepository,
+    @repository(GenreRepository) private genreRepo: GenreRepository,
   ) { }
 
   @rabbitmqSubscribe({
     exchange: 'amq.topic',
-    queue: 'micro-catalog/sync-category',
-    routingKey: 'model.category.*',
+    queue: 'micro-catalog/sync-gente',
+    routingKey: 'model.genre.*',
   })
   async handler({ data, message }: { data: any; message: ConsumeMessage }) {
 
@@ -24,13 +24,13 @@ export class CategorySyncService {
 
     switch (event) {
       case 'created':
-        await this.categoryRepo.create(data);
+        await this.genreRepo.create(data);
         break;
       case 'updated':
-        await this.categoryRepo.updateById(data.id, data);
+        await this.genreRepo.updateById(data.id, data);
         break;
       case 'deleted':
-        await this.categoryRepo.deleteById(data.id);
+        await this.genreRepo.deleteById(data.id);
         break;
       default:
         break;

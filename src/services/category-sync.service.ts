@@ -4,7 +4,7 @@ import { CategoryRepository } from '../repositories';
 import { rabbitmqSubscribe } from '../decorators/rabbitmq-subscribe.decorator';
 import { ConsumeMessage } from 'amqplib';
 
-@bind({ scope: BindingScope.TRANSIENT })
+@bind({ scope: BindingScope.SINGLETON })
 export class CategorySyncService {
 
   constructor(

@@ -4,7 +4,7 @@ import { ConsumeMessage } from 'amqplib';
 import { rabbitmqSubscribe } from '../decorators/rabbitmq-subscribe.decorator';
 import { GenreRepository } from '../repositories';
 
-@bind({ scope: BindingScope.TRANSIENT })
+@bind({ scope: BindingScope.SINGLETON })
 export class GenreSyncServiceService {
 
   constructor(

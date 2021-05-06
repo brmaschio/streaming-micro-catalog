@@ -3,38 +3,25 @@ import { repository } from '@loopback/repository';
 import { CategoryRepository } from '../repositories';
 import { rabbitmqSubscribe } from '../decorators/rabbitmq-subscribe.decorator';
 import { ConsumeMessage } from 'amqplib';
+import { BaseModelSyncService } from './base-model-sync.service';
 
 @bind({ scope: BindingScope.SINGLETON })
-export class CategorySyncService {
+export class CategorySyncService extends BaseModelSyncService {
 
   constructor(
     @repository(CategoryRepository) private categoryRepo: CategoryRepository,
-  ) { }
+  ) {
+    super();
+  }
 
   @rabbitmqSubscribe({
     exchange: 'amq.topic',
-    queue: 'micro-catalog/sync-category',
+    queue: 'micro-catalog/sync-videos/category',
     routingKey: 'model.category.*',
   })
   async handler({ data, message }: { data: any; message: ConsumeMessage }) {
 
-    console.log(data);
-
-    const [, event] = message.fields.routingKey.split('.').slice(1);
-
-    switch (event) {
-      case 'created':
-        await this.categoryRepo.create(data);
-        break;
-      case 'updated':
-        await this.categoryRepo.updateById(data.id, data);
-        break;
-      case 'deleted':
-        await this.categoryRepo.deleteById(data.id);
-        break;
-      default:
-        break;
-    }
+    await this.sync({ repo: this.categoryRepo, data, message });
 
   }
 

@@ -1,3 +1,4 @@
+import { getModelSchemaRef } from '@loopback/openapi-v3';
 import {Entity, model, property} from '@loopback/repository';
 
 @model({settings: {strict: false}})
@@ -13,13 +14,20 @@ export class Category extends Entity {
   @property({
     type: 'string',
     required: true,
+    jsonSchema: {
+      minLength: 1,
+      maxLength: 255,
+    },
   })
   name: string;
 
   @property({
     type: 'string',
     required: false,
-    default: '',
+    default: null,
+    jsonSchema: {
+      nullable: true,
+    },
   })
   description: string;
 
@@ -56,3 +64,10 @@ export interface CategoryRelations {
 }
 
 export type CategoryWithRelations = Category & CategoryRelations;
+
+const schema = getModelSchemaRef(Category, {
+  title: 'new schema',
+  partial: true
+});
+
+console.log(schema);

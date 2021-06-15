@@ -6,7 +6,7 @@ import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
 import {RabbitmqServer} from './servers';
-import {RestExplorerComponent} from './components';
+import {RestExplorerComponent, ValidatorsComponent} from './components';
 import {RestExplorerBindings} from '@loopback/rest-explorer';
 
 export class MicroCatalogApplication extends BootMixin(
@@ -14,10 +14,12 @@ export class MicroCatalogApplication extends BootMixin(
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
-
     // Set up the custom sequence
     options.rest.sequence = MySequence;
+    
     this.component(RestComponent);
+    this.component(ValidatorsComponent);
+    
     const restServer = this.getSync<RestServer>('servers.RestServer');
     // Set up default home page
     restServer.static('/', path.join(__dirname, '../public'));
@@ -40,5 +42,6 @@ export class MicroCatalogApplication extends BootMixin(
     };
 
     this.servers([RabbitmqServer]);
+
   }
 }

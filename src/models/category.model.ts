@@ -1,6 +1,12 @@
 import { getModelSchemaRef } from '@loopback/openapi-v3';
 import {Entity, model, property} from '@loopback/repository';
 
+export interface SmallCategory {
+  id: string;
+  name: string;
+  is_active: boolean;
+}
+
 @model({settings: {strict: false}})
 export class Category extends Entity {
   @property({

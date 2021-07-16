@@ -1,4 +1,5 @@
 import { Entity, model, property } from '@loopback/repository';
+import { SmallCategory } from './category.model';
 
 @model({ settings: { strict: false } })
 export class Genre extends Entity {
@@ -39,6 +40,29 @@ export class Genre extends Entity {
     required: true,
   })
   updated_at: string;
+
+  @property({
+    type: 'object', // se colocar direto com array pode dar um bug, por conta da forma que esta trabalhando
+    jsonSchema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+          },
+          name: {
+            type: 'string',
+          },
+          is_active: {
+            type: 'boolean',
+          },
+        },
+        uniqueItems: true,
+      },
+    },
+  })
+  categories: SmallCategory;
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

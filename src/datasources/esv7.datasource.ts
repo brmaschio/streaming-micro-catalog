@@ -1,5 +1,5 @@
-import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
-import {juggler} from '@loopback/repository';
+import { inject, lifeCycleObserver, LifeCycleObserver } from '@loopback/core';
+import { juggler } from '@loopback/repository';
 import configJson from './esv7.datasource.config.json';
 
 const config = {
@@ -42,6 +42,22 @@ const config = {
     updated_at: {
       type: 'date',
     },
+    categories: {
+      type: 'nested',
+      properties: {
+        id: { type: 'keyword' },
+        name: {
+          type: 'text',
+          fields: {
+            keyword: {
+              type: 'keyword',
+              ignore_above: 256,
+            },
+          },
+        },
+        is_active: { type: 'boolean' },
+      },
+    },
   },
 };
 
@@ -53,7 +69,7 @@ export class Esv7DataSource extends juggler.DataSource
   static readonly defaultConfig = config;
 
   constructor(
-    @inject('datasources.config.esv7', {optional: true})
+    @inject('datasources.config.esv7', { optional: true })
     dsConfig: object = config,
   ) {
     super(dsConfig);
